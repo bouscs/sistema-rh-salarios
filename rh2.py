@@ -1,6 +1,8 @@
-# programa de sistema de rh
-
-
+'''
+Sistema de RH - Cálculo Salarial
+Versão: 1.0.0
+Autores: Artur B. Xavier, David Megumi, Miguel Teixeira Magalhães
+'''
 # dados necessários para cálculos
 salariob = float(input('Valor do salário bruto:'))
 bonus = float(input('Valor de bônus (do mês):'))
