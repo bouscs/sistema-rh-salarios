@@ -5,17 +5,6 @@ Autores: Artur B. Xavier, David Megumi, Miguel Teixeira Magalhães
 """
 
 print('SISTEMA DE RH - CÁLCULO SALARIAL')
-print()
-
-# dados necessários para cálculos
-
-salariob = float(input('Valor do salário bruto: R$'))
-
-bonus = float(input('Valor de bônus (do mês): R$'))
-bonust = float(input('Bonus total do ano (media dos bonus do ano): R$'))
-meses = float(input('Número total de meses trabalhados (mais do que 15 dias trabalhados): '))
-dependentes = float(input('Número de dependentes: '))
-ferias = float(input('Dias de férias tirados: '))
 
 
 # Retornar input validado pela função "validar"
@@ -55,7 +44,6 @@ dependentes = float(input('Número de dependentes:'))
 # Número de dias de férias tirados
 ferias = float(input('Dias de férias tirados:'))
 
-
 while True:
     global abono
     abono = input('Abono pecuniário ("s" ou "n"):').lower().strip()
@@ -64,14 +52,13 @@ while True:
     else:
         print('Favor inserir um valor que seja "s" ou "n".')
 
-
 pensao = float(input('Valor da pensão alimentícia, se não houver, digite 0): '))
-descontos = float(input('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/tc),se não houver, digite 0: '))
+descontos = float(
+    input('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/tc),se não houver, digite 0: '))
 
 pensao = float(input('Valor da pensão alimentícia, se não houver, digite 0):'))
 descontos = float(
     input('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/tc),se não houver, digite 0:'))
-
 
 
 # funções:
@@ -169,25 +156,28 @@ print('Resultado:')
 print()
 # print dos resultados
 
-print (f'O valor do INSS contribuido é de: \033[0:32mR${inss:.3f}\033[m ({insspor:.3f}% do salário bruto)')
+print(f'O valor do INSS contribuido é de: \033[0:32mR${inss:.3f}\033[m ({insspor:.3f}% do salário bruto)')
 
-print (f'O valor do IRRF a ser pago é de: \033[0:32mR${irrf:.3f}\033[m ({irrfpor:.3f}% do salário bruto)')
+print(f'O valor do IRRF a ser pago é de: \033[0:32mR${irrf:.3f}\033[m ({irrfpor:.3f}% do salário bruto)')
 
-print (f'O salário líquido é: \033[0:32mR${salarioliq:.3f}\033[m ou, considerando os bonus recebidos: \033[0:32mR${salariobon:.3f}\033[m')
+print(
+    f'O salário líquido é: \033[0:32mR${salarioliq:.3f}\033[m ou, considerando os bonus recebidos: \033[0:32mR${salariobon:.3f}\033[m')
 
-print (f'A primeira parcela do Décimo Terceiro é: \033[0:32mR${parcela1_13:.3f}\033[m')
+print(f'A primeira parcela do Décimo Terceiro é: \033[0:32mR${parcela1_13:.3f}\033[m')
 
-print (f'A segunda parcela do Décimo Terceiro é: \033[0:32mR${parcela2_13:.3f}\033[m')
+print(f'A segunda parcela do Décimo Terceiro é: \033[0:32mR${parcela2_13:.3f}\033[m')
 
-print (f'O valor do INSS contribuido no Décimo Terceiro é de: \033[0:32mR${inss13:.3f}\033[m ({inss13por:.3f}% do Décimo Terceiro bruto)')
+print(
+    f'O valor do INSS contribuido no Décimo Terceiro é de: \033[0:32mR${inss13:.3f}\033[m ({inss13por:.3f}% do Décimo Terceiro bruto)')
 
-print (f'O valor do IRRF a ser pago no Décimo Terceiro é de: \033[0:32mR${irrf13:.3f}\033[m ({irrf13por:.3f}% do Décimo Terceiro)')
+print(
+    f'O valor do IRRF a ser pago no Décimo Terceiro é de: \033[0:32mR${irrf13:.3f}\033[m ({irrf13por:.3f}% do Décimo Terceiro)')
 
-print (f'Parcela unica: \033[0:32mR${parcelaunica:.3f}\033[m')
+print(f'Parcela unica: \033[0:32mR${parcelaunica:.3f}\033[m')
 
-print(f'O valor do INSS descontado das férias é de \033[0:32mR$ {inssferias:.3f}\033[m e o do IRRF descontado das férias é de \033[0:32mR$ {irrfferias:.3f}\033[m')
+print(
+    f'O valor do INSS descontado das férias é de \033[0:32mR$ {inssferias:.3f}\033[m e o do IRRF descontado das férias é de \033[0:32mR$ {irrfferias:.3f}\033[m')
 
 print(f'O valor do salário de férias é de: \033[0:32mR$ {salarioliqferias:.3f}\033[m')
-
 
 input('Pressione Enter para fechar o programa...')
