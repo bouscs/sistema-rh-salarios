@@ -1,64 +1,12 @@
 """
 Sistema de RH - Cálculo Salarial
-Versão: 1.0.0
+Versão: 2.0.0
 Autores: Artur B. Xavier, David Megumi, Miguel Teixeira Magalhães
 """
 
+
 print('SISTEMA DE RH - CÁLCULO SALARIAL')
-
-
-# Retornar input validado pela função "validar"
-def input_validado(mensagem, erro, validar):
-    while True:
-        try:
-            resposta = input(mensagem)
-            if validar(resposta):
-                return resposta
-            else:
-                raise
-        except:
-            print(erro)
-
-
-# Salário bruto
-salariob = float(input_validado('Valor do salário bruto: ',
-                                'Favor inserir um valor válido.',
-                                lambda resposta: float(resposta) > 0))
-
-# Bônus do mês atual
-bonus = float(input_validado('Valor do bônus do mês: ',
-                             'Favor inserir um valor válido.',
-                             lambda resposta: float(resposta) >= 0))
-
-# Média de bonus mensal do ano trabalhado
-bonust = float(input_validado('Bônus total do ano (media dos bônus mensais do ano): ',
-                              'Favor inserir um valor válido.',
-                              lambda resposta: float(resposta) >= 0))
-
-# Meses trabalhados no ano
-meses = float(input('Número total de meses trabalhados (mais do que 15 dias trabalhados):'))
-
-# Número de dependentes
-dependentes = float(input('Número de dependentes:'))
-
-# Número de dias de férias tirados
-ferias = float(input('Dias de férias tirados:'))
-
-while True:
-    global abono
-    abono = input('Abono pecuniário ("s" ou "n"):').lower().strip()
-    if abono == "s" or abono == "n":
-        break
-    else:
-        print('Favor inserir um valor que seja "s" ou "n".')
-
-pensao = float(input('Valor da pensão alimentícia, se não houver, digite 0): '))
-descontos = float(
-    input('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/tc),se não houver, digite 0: '))
-
-pensao = float(input('Valor da pensão alimentícia, se não houver, digite 0):'))
-descontos = float(
-    input('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/tc),se não houver, digite 0:'))
+print()
 
 
 # funções:
@@ -86,7 +34,6 @@ def calculo_inss(x):
     else:  # 5a possibilidade de salario (maior salario possivel)
         return 751.97
 
-
 # funcao de calculo de irrf
 def calculo_irrf(a, b):  # aqui, a e b são respectivamente, salario bruto e inss
 
@@ -105,10 +52,63 @@ def calculo_irrf(a, b):  # aqui, a e b são respectivamente, salario bruto e ins
     elif basec > 4664.68:
         return (basec * 0.275) - 869.36
 
-
 # função de calculo de porcentagem
 def porcentagem(x, y):
     return (y * 100) / x
+
+# Retornar input validado pela função "validar"
+def input_validado(mensagem, erro, validar):
+    while True:
+        resposta = input(mensagem)
+        try:
+            if validar(resposta):
+                return resposta
+            else:
+                print(erro)
+        except:
+            print(erro)
+
+
+# dados necessários para cálculos
+# Salário bruto
+salariob = float(input_validado('Valor do salário bruto: ',
+                                'Favor inserir um valor válido.',
+                                lambda resposta: float(resposta) >= 1100))
+# Bônus do mês atual
+bonus = float(input_validado('Valor do bônus do mês: ',
+                             'Favor inserir um valor válido.',
+                             lambda resposta: float(resposta) >= 0))
+# Média de bonus mensal do ano trabalhado
+bonust = float(input_validado('Bônus total do ano (media dos bônus mensais do ano): ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) >= 0))
+# Meses trabalhados no ano
+meses =  float(input_validado('Total de meses trabalhados no ano: ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) > 0))
+# Número de dependentes
+dependentes =  float(input_validado('Número de dependentes: ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) >= 0))
+# Número de dias de férias tirados
+ferias = float(input_validado('Número de dias de férias tirados: ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) >= 0))
+while True:
+    global abono
+    abono = input('Abono pecuniário ("s" ou "n"):').lower().strip()
+    if abono == "s" or abono == "n":
+        break
+    else:
+        print('Favor inserir um valor que seja "s" ou "n".')
+# Valor da pensão alimentícia
+pensao = float(input_validado('Valor da pensão alimentícia: ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) >= 0))
+#Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/etc)
+descontos = float(input_validado('Valor da soma de todo e qualquer desconto (plano odontológico/plano de saude/etc): ',
+                              'Favor inserir um valor válido.',
+                              lambda resposta: float(resposta) >= 0))
 
 
 # calculo do salario liquido
@@ -118,6 +118,7 @@ irrf = calculo_irrf(salariob, inss)
 irrfpor = porcentagem(salariob, irrf)
 salarioliq = salariob - inss - irrf - descontos - pensao  # salario liquido sem bonus
 salariobon = salarioliq + bonus  # salario liquido com bonus
+
 
 # decimo terceiro
 # primeira parcela:
@@ -136,48 +137,44 @@ parcela2_13 = parcela1_13 - inss13 - irrf13 + bonust
 # parcela unica do decimo terceiro
 parcelaunica = parcela1_13 + parcela2_13
 
-# calculo falário de férias
+
+# calculo salário de férias
 diaria = (salariob + bonust) / 30
 salariobferias = diaria * ferias * (4 / 3)
 
 # abono pecuniário: https://www.dicionariofinanceiro.com/abono-pecuniario/
 abonopec = ((salariob / 30) * ferias) / 3
-
 inssferias = calculo_inss(salariobferias)
 irrfferias = calculo_irrf(salariobferias, inssferias)
-
 salarioliqferias = salariobferias - inssferias - irrfferias
-
 if abono == "s":
     salarioliqferias += abonopec
 
+
+# print dos resultados
 print()
 print('Resultado:')
 print()
-# print dos resultados
 
-print(f'O valor do INSS contribuido é de: \033[0:32mR${inss:.3f}\033[m ({insspor:.3f}% do salário bruto)')
+print (f'O valor do INSS contribuido é de: R${inss:.3f} \033 {insspor:.3f}% do salário bruto')
 
-print(f'O valor do IRRF a ser pago é de: \033[0:32mR${irrf:.3f}\033[m ({irrfpor:.3f}% do salário bruto)')
+print (f'O valor do IRRF a ser pago é de: R${irrf:.3f} \033 {irrfpor:.3f}% do salário bruto')
 
-print(
-    f'O salário líquido é: \033[0:32mR${salarioliq:.3f}\033[m ou, considerando os bonus recebidos: \033[0:32mR${salariobon:.3f}\033[m')
+print (f'O salário líquido é: R${salarioliq:.3f} ou, considerando os bonus recebidos: R${salariobon:.3f}')
 
-print(f'A primeira parcela do Décimo Terceiro é: \033[0:32mR${parcela1_13:.3f}\033[m')
+print (f'A primeira parcela do Décimo Terceiro é: R${parcela1_13:.3f}')
 
-print(f'A segunda parcela do Décimo Terceiro é: \033[0:32mR${parcela2_13:.3f}\033[m')
+print (f'A segunda parcela do Décimo Terceiro é: R${parcela2_13:.3f}')
 
-print(
-    f'O valor do INSS contribuido no Décimo Terceiro é de: \033[0:32mR${inss13:.3f}\033[m ({inss13por:.3f}% do Décimo Terceiro bruto)')
+print (f'Parcela unica: R${parcelaunica:.3f}')
 
-print(
-    f'O valor do IRRF a ser pago no Décimo Terceiro é de: \033[0:32mR${irrf13:.3f}\033[m ({irrf13por:.3f}% do Décimo Terceiro)')
+print (f'O valor do INSS contribuido no Décimo Terceiro é de: R${inss13:.3f} \033 {inss13por:.3f}% do Décimo Terceiro bruto')
 
-print(f'Parcela unica: \033[0:32mR${parcelaunica:.3f}\033[m')
+print (f'O valor do IRRF a ser pago no Décimo Terceiro é de: R${irrf13:.3f} \033 {irrf13por:.3f}% do Décimo Terceiro')
 
-print(
-    f'O valor do INSS descontado das férias é de \033[0:32mR$ {inssferias:.3f}\033[m e o do IRRF descontado das férias é de \033[0:32mR$ {irrfferias:.3f}\033[m')
+print(f'O valor do INSS descontado das férias é de R$ {inssferias:.3f} e o do IRRF descontado das férias é de R${irrfferias:.3f}')
 
-print(f'O valor do salário de férias é de: \033[0:32mR$ {salarioliqferias:.3f}\033[m')
+print(f'O valor do salário de férias é de: R$ {salarioliqferias:.3f}')
 
+# finalização do programa
 input('Pressione Enter para fechar o programa...')
