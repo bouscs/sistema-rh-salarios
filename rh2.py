@@ -4,6 +4,37 @@ Versão: 2.0.0
 Autores: Artur B. Xavier, David Megumi, Miguel Teixeira Magalhães
 """
 
+#BANCO DE DADOS:
+# importando a extensao para conectar com o banco de dados oracle
+import cx_Oracle
+
+#tentativa de conexão com o banco de dados:
+try:
+    conn = cx_Oracle.connect('Rh/senha@localhost:1521/xe')
+#mensagem de erro de conexão
+except Exception as erro:
+    print('Ocorreu um erro ao tentar conectar ao banco de dados!', erro)
+#tentativa de fetch dos dados de valores de impostos:
+else:
+    try:
+        cur = conn.cursor()
+        sql = """ SELECT valor FROM taxas """
+        cur.execute(sql)
+        valores = cur.fetchall()
+    #erro de fetch
+    except Exception as erro:
+        print('Ocorreu um erro ao tentar extrair informações do banco de dados!', erro)
+    #mensagem de sucesso de conexão e fetch
+    else:
+        print('Extração de dados completa.')
+    #fechando cursor
+    finally:
+        cur.close()
+#fechando conexão
+finally:
+    conn.close()
+
+
 print('SISTEMA DE RH - CÁLCULO SALARIAL')
 print()
 
@@ -13,43 +44,43 @@ print()
 def calculo_inss(x):
     # possiveis valores de aliquotas:
     y = x  # x e y são o valor do salario bruto que será calculado
-    a = 82.5
-    b = 99.31
-    c = 132.2076
-    if 0 < x <= 1100:  # 1a possibilidade de salario (menor salario possivel)
-        return y * 0.075
-    elif 1100 < x <= 2203.48:  # 2a possibilidade de salario
-        y = x - 1100
-        b = y * 0.09
+    a = float(valores[0][0])
+    b = float(valores[1][0])
+    c = float(valores[2][0])
+    if 0 < x <= float(valores[3][0]):  # 1a possibilidade de salario (menor salario possivel)
+        return y *  float(valores[6][0])
+    elif float(valores[3][0]) < x <= float(valores[4][0]):  # 2a possibilidade de salario
+        y = x - float(valores[3][0])
+        b = y *  float(valores[7][0])
         return a + b
-    elif 2203.48 < x <= 3305.22:  # 3a possibilidade de salario
-        y = x - 2203.48
-        c = y * 0.12
+    elif float(valores[4][0]) < x <= float(valores[5][0]):  # 3a possibilidade de salario
+        y = x - float(valores[4][0])
+        c = y *  float(valores[8][0])
         return a + b + c
-    elif 3305.22 < x <= 6433.57:  # 4a possibilidade de salario
-        y = x - 3305.22
-        d = y * 0.14
+    elif float(valores[5][0]) < x <= float(valores[10][0]):  # 4a possibilidade de salario
+        y = x -  float(valores[5][0])
+        d = y *  float(valores[9][0])
         return a + b + c + d
     else:  # 5a possibilidade de salario (maior salario possivel)
-        return 751.97
+        return  float(valores[11][0])
 
 # funcao de calculo de irrf
 def calculo_irrf(a, b):  # aqui, a e b são respectivamente, salario bruto e inss
 
     # base de calculo para o IRRF
-    basec = a - b - pensao - (dependentes * 189.59)
+    basec = a - b - pensao - (dependentes *  float(valores[12][0]))
 
     # valores de aliquotas e descontos baseados na tabela de IRRF de 2021:
-    if basec < 1903.98:
+    if basec <  float(valores[13][0]):
         return 0
-    elif 1903.99 <= basec < 2826.66:
-        return (basec * 0.075) - 142.8
-    elif 2826.66 <= basec < 3751.06:
-        return (basec * 0.15) - 354.80
-    elif 3751.06 <= basec <= 4664.68:
-        return (basec * 0.225) - 636.13
-    elif basec > 4664.68:
-        return (basec * 0.275) - 869.36
+    elif float(valores[13][0]) <= basec < float(valores[14][0]):
+        return (basec * float(valores[17][0])) - float(valores[21][0])
+    elif float(valores[14][0]) <= basec < float(valores[15][0]):
+        return (basec * float(valores[18][0])) - float(valores[22][0])
+    elif float(valores[15][0]) <= basec <= float(valores[16][0]):
+        return (basec * float(valores[19][0])) - float(valores[23][0])
+    elif basec > float(valores[16][0]):
+        return (basec * float(valores[20][0])) - float(valores[24][0])
 
 # função de calculo de porcentagem
 def porcentagem(x, y):
@@ -80,7 +111,7 @@ for i in range(n):
     # Salário bruto
     salariob = float(input_validado('Valor do salário bruto: ',
                                     'Favor inserir um valor válido.',
-                                    lambda resposta: float(resposta) >= 1100))
+                                    lambda resposta: float(resposta) >= float(valores[3][0])))
     # Bônus do mês atual
     bonus = float(input_validado('Valor do bônus do mês: ',
                                 'Favor inserir um valor válido.',
