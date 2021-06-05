@@ -1,5 +1,5 @@
 # Sistema RH - Cálculo Salarial
-- **Versão:** 1.0.0
+- **Versão:** 2.0.0
 - **Autores:**
   - Artur Busani Xavier 
   - David Megumi
