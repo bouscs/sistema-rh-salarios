@@ -4,42 +4,44 @@ Versão: 2.0.0
 Autores: Artur B. Xavier, David Megumi, Miguel Teixeira Magalhães
 """
 
-#BANCO DE DADOS:
+# BANCO DE DADOS:
+
 # importando a extensao para conectar com o banco de dados oracle
 import cx_Oracle
 
-#tentativa de conexão com o banco de dados:
+# tentativa de conexão com o banco de dados:
 try:
     conn = cx_Oracle.connect('Rh/senha@localhost:1521/xe')
-#mensagem de erro de conexão
+# mensagem de erro de conexão
 except Exception as erro:
     print('Ocorreu um erro ao tentar conectar ao banco de dados!', erro)
-#tentativa de fetch dos dados de valores de impostos:
+# tentativa de fetch dos dados de valores de impostos:
 else:
+    print('\nA conexão com o banco de dados foi bem sucedida.')
     try:
         cur = conn.cursor()
         sql = """ SELECT valor FROM taxas """
         cur.execute(sql)
         valores = cur.fetchall()
-    #erro de fetch
+    # erro de fetch
     except Exception as erro:
         print('Ocorreu um erro ao tentar extrair informações do banco de dados!', erro)
-    #mensagem de sucesso de conexão e fetch
+    # mensagem de sucesso de conexão e fetch
     else:
-        print('Extração de dados completa.')
-    #fechando cursor
+        print('Extração de dados completa.\n')
+    # fechando cursor
     finally:
         cur.close()
-#fechando conexão
+# fechando conexão
 finally:
     conn.close()
 
 
-print('SISTEMA DE RH - CÁLCULO SALARIAL')
+print('\nSISTEMA DE RH - CÁLCULO SALARIAL')
 print()
 
 
-# funções:
+# FUNÇÕES:
 # função para calculo do inss
 def calculo_inss(x):
     # possiveis valores de aliquotas:
@@ -99,14 +101,52 @@ def input_validado(mensagem, erro, validar):
             print(erro)
 
 
-#No de funcionarios para a repetição:
-n = int(input_validado('Insira o numero de funcionários: ',
+# No de funcionarios para a repetição:
+n = int(input_validado('Insira o numero de funcionários a calcular: ',
                        'Favor inserir um valor válido.', 
                        lambda resposta: float(resposta) >= 1))
 
+# repetição do programa para no de funcionarios a calcular:
 for i in range(n):
     m = i+1
-    print(f'\nCÁLCULO PARA FUNCIONÁRIO #{m}:\n')
+
+    # informações do funcionario:
+    nome = input(f'\nNome do funcionário #{m}: ') #sem validações, assim até funcionarios com nomes muito exóticos não causariam problemas 
+    # setor com validações para os supostos setores da empresa:
+    while True:
+        setor1 = input_validado('Setor do funcionário ( ADM / FN / RH / COM / OP / TI ): ',
+                            'Insira um setor válido',
+                            lambda resposta: resposta.upper() == 'ADM' or           # setor administrativo
+                                             resposta.upper() == 'FN' or            # setor financeiro
+                                             resposta.upper() == 'RH' or            # setor de recursos humanos
+                                             resposta.upper() == 'COM' or           # setor comercial
+                                             resposta.upper() == 'OP' or            # setor operacional
+                                             resposta.upper() == 'TI').upper()      # setor de tecnologia da informação
+        # nome do setor por extenso:
+        if setor1 == 'ADM':
+            setor = 'Setor Administrativo'
+            break
+        elif setor1 == 'FN':
+            setor = 'Setor Financeiro'
+            break
+        elif setor1 == 'RH':
+            setor = 'Setor de Recursos Humanos'
+            break
+        elif setor1 == 'COM':
+            setor = 'Setor Comercial'
+            break
+        elif setor1 == 'OP':
+            setor = 'Setor Operacional'
+            break
+        elif setor1 == 'TI':
+            setor = 'Setor de Tecnologia da Informação'
+            break
+        else:
+            print('Erro de input de setor! Insira o setor novamente!')
+
+
+    # entradas para cálculos:
+    print(f'\n\nCÁLCULO PARA FUNCIONÁRIO #{m}:\n')
     # dados necessários para cálculos
     # Salário bruto
     salariob = float(input_validado('Valor do salário bruto: ',
@@ -183,7 +223,9 @@ for i in range(n):
     # abono pecuniário: https://www.dicionariofinanceiro.com/abono-pecuniario/
     abonopec = ((salariob / 30) * ferias) / 3
     inssferias = calculo_inss(salariobferias)
+    inssferiaspor = porcentagem(salariobferias,inssferias)
     irrfferias = calculo_irrf(salariobferias, inssferias)
+    irrfferiaspor = porcentagem(salariobferias,irrfferias)
     salarioliqferias = salariobferias - inssferias - irrfferias
     if abono == "s":
         salarioliqferias += abonopec
@@ -191,14 +233,22 @@ for i in range(n):
 
     # print dos resultados
     print()
-    print(f'RESULTADO DO FUNCIONARIO #{m}: ')
+    print(f'\n----------------------------------------------------------------------\n\nRESULTADO DO FUNCIONARIO #{m}: ')
     print()
+
+    print(f'Nome do funcionário: {nome}\nSetor do funcionário: {setor}')
+
+    print()
+
+    print('SALÁRIO MENSAL:')
 
     print (f'O valor do INSS contribuido é de: R${inss:.3f} \033 {insspor:.3f}% do salário bruto')
 
     print (f'O valor do IRRF a ser pago é de: R${irrf:.3f} \033 {irrfpor:.3f}% do salário bruto')
 
-    print (f'O salário líquido é: R${salarioliq:.3f} ou, considerando os bonus recebidos: R${salariobon:.3f}\n')
+    print (f'O salário líquido é: R${salariobon:.3f}\n')
+
+    print('\nDÉCIMO TERCEIRO SALÁRIO:')
 
     print (f'O valor do INSS contribuido no Décimo Terceiro é de: R${inss13:.3f} \033 {inss13por:.3f}% do Décimo Terceiro bruto')
 
@@ -208,11 +258,17 @@ for i in range(n):
 
     print (f'A segunda parcela do Décimo Terceiro é: R${parcela2_13:.3f}')
 
-    print (f'Parcela unica: R${parcelaunica:.3f}\n')
+    print (f'Parcela única: R${parcelaunica:.3f}\n')
 
-    print(f'O valor do INSS descontado das férias é de R$ {inssferias:.3f} e o do IRRF descontado das férias é de R${irrfferias:.3f}')
+    print('\nSALÁRIO DE FÉRIAS:')
+
+    print(f'O valor do INSS descontado das férias é de R$ {inssferias:.3f} \033 {inssferiaspor:.3f}% do salário de férias bruto')  
+    
+    print(f'o do IRRF descontado das férias é de R${irrfferias:.3f} \033 {irrfferiaspor}% do salário de férias bruto')
 
     print(f'O valor do salário de férias é de: R$ {salarioliqferias:.3f}\n')
+
+    print('\n----------------------------------------------------------------------\n')
 
 # finalização do programa
 input('Pressione Enter para fechar o programa...')
