@@ -11,8 +11,8 @@ import cx_Oracle
 
 # tentativa de conexão com o banco de dados:
 try:
-    conn = cx_Oracle.connect('Rh/senha@localhost:1521/xe')
-# mensagem de erro de conexão
+    conn = cx_Oracle.connect('Rh/senha@localhost:1521/xe')    # aqui, a conexão oracle e sua senha são Rh e senha, respectivamente. A porta e extensão são osvalores padronizados.
+# mensagem de erro de conexão:
 except Exception as erro:
     print('Ocorreu um erro ao tentar conectar ao banco de dados!', erro)
 # tentativa de fetch dos dados de valores de impostos:
@@ -22,17 +22,17 @@ else:
         cur = conn.cursor()
         sql = """ SELECT valor FROM taxas """
         cur.execute(sql)
-        valores = cur.fetchall()
-    # erro de fetch
+        valores = cur.fetchall()        # guarda valores selecionados do banco de dados em uma lista de tuples                                                             
+    # erro de fetch:
     except Exception as erro:
         print('Ocorreu um erro ao tentar extrair informações do banco de dados!', erro)
-    # mensagem de sucesso de conexão e fetch
+    # mensagem de sucesso de conexão e fetch:
     else:
         print('Extração de dados completa.\n')
-    # fechando cursor
+    # fechando cursor:
     finally:
         cur.close()
-# fechando conexão
+# fechando conexão:
 finally:
     conn.close()
 
@@ -49,21 +49,21 @@ def calculo_inss(x):
     a = float(valores[0][0])
     b = float(valores[1][0])
     c = float(valores[2][0])
-    if 0 < x <= float(valores[3][0]):  # 1a possibilidade de salario (menor salario possivel)
+    if 0 < x <= float(valores[3][0]):                           # 1a possibilidade de salario (menor salario possivel)
         return y *  float(valores[6][0])
-    elif float(valores[3][0]) < x <= float(valores[4][0]):  # 2a possibilidade de salario
+    elif float(valores[3][0]) < x <= float(valores[4][0]):      # 2a possibilidade de salario
         y = x - float(valores[3][0])
         b = y *  float(valores[7][0])
         return a + b
-    elif float(valores[4][0]) < x <= float(valores[5][0]):  # 3a possibilidade de salario
+    elif float(valores[4][0]) < x <= float(valores[5][0]):      # 3a possibilidade de salario
         y = x - float(valores[4][0])
         c = y *  float(valores[8][0])
         return a + b + c
-    elif float(valores[5][0]) < x <= float(valores[10][0]):  # 4a possibilidade de salario
+    elif float(valores[5][0]) < x <= float(valores[10][0]):     # 4a possibilidade de salario
         y = x -  float(valores[5][0])
         d = y *  float(valores[9][0])
         return a + b + c + d
-    else:  # 5a possibilidade de salario (maior salario possivel)
+    else:                                                       # 5a possibilidade de salario (maior salario possivel)
         return  float(valores[11][0])
 
 # funcao de calculo de irrf
