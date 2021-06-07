@@ -163,7 +163,7 @@ for i in range(n):
     # Meses trabalhados no ano
     meses =  float(input_validado('Total de meses trabalhados no ano: ',
                                 'Favor inserir um valor válido.',
-                                lambda resposta: float(resposta) > 0))
+                                lambda resposta: 0 < float(resposta) < 13))
     # Número de dependentes
     dependentes =  float(input_validado('Número de dependentes: ',
                                 'Favor inserir um valor válido.',
