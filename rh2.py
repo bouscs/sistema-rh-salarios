@@ -15,6 +15,7 @@ try:
 # mensagem de erro de conexão:
 except Exception as erro:
     print('Ocorreu um erro ao tentar conectar ao banco de dados!', erro)
+    input()
 # tentativa de fetch dos dados de valores de impostos:
 else:
     print('\nA conexão com o banco de dados foi bem sucedida.')
@@ -26,6 +27,7 @@ else:
     # erro de fetch:
     except Exception as erro:
         print('Ocorreu um erro ao tentar extrair informações do banco de dados!', erro)
+        input()
     # mensagem de sucesso de conexão e fetch:
     else:
         print('Extração de dados completa.\n')
